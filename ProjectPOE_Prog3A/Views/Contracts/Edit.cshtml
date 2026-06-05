@@ -1,0 +1,69 @@
+@model ProjectPOE_Prog3A.Models.Contracts
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Contracts</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ContractName" class="control-label"></label>
+                <input asp-for="ContractName" class="form-control" />
+                <span asp-validation-for="ContractName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContractDescription" class="control-label"></label>
+                <input asp-for="ContractDescription" class="form-control" />
+                <span asp-validation-for="ContractDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContractType" class="control-label"></label>
+                <input asp-for="ContractType" class="form-control" />
+                <span asp-validation-for="ContractType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContractStatus" class="control-label"></label>
+                <input asp-for="ContractStatus" class="form-control" />
+                <span asp-validation-for="ContractStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="clients" class="control-label"></label>
+                <input asp-for="clients" class="form-control" />
+                <span asp-validation-for="clients" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Files" class="control-label"></label>
+                <input asp-for="Files" class="form-control" />
+                <span asp-validation-for="Files" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

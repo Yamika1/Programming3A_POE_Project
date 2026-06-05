@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="ProjectPOE_Prog3A/ProjectPOE_Prog3A.csproj" />
+  <Project Path="Web_Api/Web_Api.csproj" />
+</Solution>

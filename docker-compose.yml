@@ -1,0 +1,13 @@
+services:
+  projectpoe_prog3a:
+    image: ${DOCKER_REGISTRY-}projectpoeprog3a
+    build:
+      context: .
+      dockerfile: ProjectPOE_Prog3A/Dockerfile
+
+  web_api:
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: Web_Api/Dockerfile
+
