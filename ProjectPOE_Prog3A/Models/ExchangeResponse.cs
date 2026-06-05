@@ -9,4 +9,3 @@
         public double conversion_result { get; set; }
     }
 }
-

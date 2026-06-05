@@ -8,6 +8,25 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ProjectPOE_Prog3A.styles.css" asp-append-version="true" />
+
+    @{
+        var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+        var bgControllers = new[] { "Clients", "Contracts", "ServiceRequests" };
+        var showBg = bgControllers.Contains(controller);
+    }
+
+    @if (showBg)
+    {
+        <style>
+            body {
+            background-image: url('/image/banner1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            }
+        </style>
+    }
 </head>
 <body>
     <header>
@@ -32,9 +51,11 @@
         </nav>
     </header>
     <div class="container">
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+
     </div>
 
     <footer class="border-top footer text-muted">

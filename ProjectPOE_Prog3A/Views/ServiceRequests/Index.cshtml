@@ -5,6 +5,9 @@
 }
 
 <h1>Index</h1>
+<div class="mb-3">
+    <a href="/ServiceRequests/Index" class="btn btn-success"> ← Back</a>
+</div>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,12 +15,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ServiceStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContractCost)
-            </th>
+         
             <th>
                 @Html.DisplayNameFor(model => model.RequestTypes)
             </th>
@@ -27,24 +25,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.RequestDescription)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContractId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Contract)
-            </th>
+           
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(model => item.ServiceStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ContractCost)
-            </td>
+          
             <td>
                 @Html.DisplayFor(model => item.RequestTypes)
             </td>
@@ -54,12 +42,7 @@
             <td>
                 @Html.DisplayFor(model => item.RequestDescription)
             </td>
-            <td>
-                @Html.DisplayFor(model => item.ContractId)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Contract)
-            </td>
+         
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
@@ -69,3 +52,70 @@
 }
     </tbody>
 </table>
+<hr />
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+
+<div class="container mt-4">
+    <h2 class="mb-4">Currency Converter</h2>
+
+    <form asp-action="Convert" method="post"
+          class="row g-3 shadow p-4 rounded bg-light">
+
+        <div class="col-md-3">
+            <label class="form-label">Amount</label>
+            <input type="number" name="amount" class="form-control" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">From</label>
+            <select name="from" class="form-select" required>
+                <option value="">-- Select Currency --</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="ZAR">ZAR - South African Rand</option>
+                <option value="EUR">EUR - Euro</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">To</label>
+            <select name="to" class="form-select" required>
+                <option value="">-- Select Currency --</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="ZAR">ZAR - South African Rand</option>
+                <option value="EUR">EUR - Euro</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">
+                Convert
+            </button>
+        </div>
+    </form>
+
+    @if (ViewBag.Result != null)
+    {
+        var result = (ProjectPOE_Prog3A.Models.ExchangeResponse)ViewBag.Result;
+
+        <div class="mt-4 alert alert-success">
+            <h4>Result:</h4>
+
+            <p class="display-6">
+                @result.conversion_result @result.target_code
+            </p>
+
+            <small>
+                Exchange Rate:
+                1 @result.base_code =
+                @result.conversion_rate @result.target_code
+            </small>
+        </div>
+    }
+</div>

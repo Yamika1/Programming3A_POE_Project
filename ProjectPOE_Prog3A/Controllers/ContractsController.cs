@@ -1,13 +1,10 @@
-
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ProjectPOE_Prog3A.Models;
 using System.Text;
 using System.Text.Json;
 
 public class ContractsController : Controller
 {
-    private readonly ProjectPOE_Prog3AContext _context;
     private readonly IWebHostEnvironment _environment;
     private readonly IHttpClientFactory _httpClientFactory;
 
@@ -16,11 +13,8 @@ public class ContractsController : Controller
         PropertyNameCaseInsensitive = true
     };
 
-    public ContractsController(ProjectPOE_Prog3AContext context,
-        IWebHostEnvironment environment,
-        IHttpClientFactory httpClientFactory)
+    public ContractsController(IWebHostEnvironment environment, IHttpClientFactory httpClientFactory)
     {
-        _context = context;
         _environment = environment;
         _httpClientFactory = httpClientFactory;
     }
@@ -80,13 +74,13 @@ public class ContractsController : Controller
         contract.ContractStatus = GetContractStatus(contract);
         ViewBag.Status = contract.ContractStatus;
 
-        try
+        var filesResponse = await httpClient.GetAsync($"api/contracts/{id}/files");
+        if (filesResponse.IsSuccessStatusCode)
         {
-            contract.Files = await _context.contractFiles
-                .Where(f => f.ContractId == id)
-                .ToListAsync();
+            var filesJson = await filesResponse.Content.ReadAsStringAsync();
+            contract.Files = JsonSerializer.Deserialize<List<ContractFile>>(filesJson, _jsonOptions) ?? new();
         }
-        catch
+        else
         {
             contract.Files = new List<ContractFile>();
         }
@@ -99,7 +93,7 @@ public class ContractsController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-[Bind("ContractName,ContractDescription,ContractType,StartDate,EndDate")] Contracts contract)
+        [Bind("ContractName,ContractDescription,ContractType,StartDate,EndDate")] Contracts contract)
     {
         ModelState.Remove("clients");
         ModelState.Remove("Files");
@@ -215,14 +209,14 @@ public class ContractsController : Controller
             return RedirectToAction("Details", new { id = contractId });
         }
 
-        var contract = await _context.Contracts.FindAsync(contractId);
-        if (contract == null)
+        var httpClient = CreateClient();
+        var contractCheck = await httpClient.GetAsync($"api/contracts/{contractId}");
+        if (!contractCheck.IsSuccessStatusCode)
             return NotFound();
 
         try
         {
             string folder = Path.Combine(_environment.WebRootPath, "uploads");
-
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 
@@ -243,8 +237,9 @@ public class ContractsController : Controller
                 ContractId = contractId
             };
 
-            _context.contractFiles.Add(contractFile);
-            await _context.SaveChangesAsync();
+            var json = JsonSerializer.Serialize(contractFile);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await httpClient.PostAsync("api/contracts/files", content);
         }
         catch (Exception ex)
         {
@@ -253,20 +248,21 @@ public class ContractsController : Controller
 
         return RedirectToAction("Details", new { id = contractId });
     }
-    public IActionResult DownloadFile(int fileId, bool download = false)
-    {
-        var file = _context.contractFiles.FirstOrDefault(f => f.Id == fileId);
 
-        if (file == null)
-            return NotFound();
+    public async Task<IActionResult> DownloadFile(int fileId, bool download = false)
+    {
+        var httpClient = CreateClient();
+        var response = await httpClient.GetAsync($"api/contracts/files/{fileId}");
+        if (!response.IsSuccessStatusCode) return NotFound();
+
+        var json = await response.Content.ReadAsStringAsync();
+        var file = JsonSerializer.Deserialize<ContractFile>(json, _jsonOptions);
+        if (file == null) return NotFound();
 
         string path = Path.Combine(_environment.WebRootPath, "uploads", file.FilePath);
-
-        if (!System.IO.File.Exists(path))
-            return NotFound();
+        if (!System.IO.File.Exists(path)) return NotFound();
 
         byte[] bytes = System.IO.File.ReadAllBytes(path);
-
 
         if (download)
             return File(bytes, "application/pdf", file.FileName);
@@ -274,5 +270,3 @@ public class ContractsController : Controller
         return File(bytes, "application/pdf");
     }
 }
-
-

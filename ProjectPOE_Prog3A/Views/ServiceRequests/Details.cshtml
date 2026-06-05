@@ -5,24 +5,17 @@
 }
 
 <h1>Details</h1>
-
+<div class="mb-3">
+    <a href="/ServiceRequests/Index" class="btn btn-success"> ← Back</a>
+</div>
 <div>
     <h4>ServiceRequests</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ServiceStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ServiceStatus)
-        </dd>
+    
     </dl>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ContractCost)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ContractCost)
-        </dd>
+     
     </dl>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.RequestTypes)
@@ -45,19 +38,7 @@
             @Html.DisplayFor(model => model.RequestDescription)
         </dd>
     </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ContractId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ContractId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Contract)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Contract)
-        </dd>
+      
     </dl>
 </div>
 <div>

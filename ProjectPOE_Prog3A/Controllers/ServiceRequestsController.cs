@@ -8,7 +8,7 @@ using static ProjectPOE_Prog3A.Models.ConcreteObserver;
 
 public class ServiceRequestsController : Controller
 {
-    private readonly ProjectPOE_Prog3AContext _context;
+  
     private readonly IHttpClientFactory _httpClientFactory;
 
     private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
@@ -16,9 +16,9 @@ public class ServiceRequestsController : Controller
         PropertyNameCaseInsensitive = true
     };
 
-    public ServiceRequestsController(ProjectPOE_Prog3AContext context, IHttpClientFactory httpClientFactory)
+    public ServiceRequestsController( IHttpClientFactory httpClientFactory)
     {
-        _context = context;
+      
         _httpClientFactory = httpClientFactory;
     }
 
@@ -213,6 +213,54 @@ public class ServiceRequestsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+    [HttpPost]
+    public async Task<IActionResult> Convert(string from, string to, double amount)
+    {
+        string fromUpper = from.ToUpper().Trim();
+        string toUpper = to.ToUpper().Trim();
 
-   
+        try
+        {
+            var currencyClient = _httpClientFactory.CreateClient("ServiceRequestsApi");
+            var response = await currencyClient.GetAsync($"api/exchangerates/{fromUpper}/{toUpper}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var rate = JsonSerializer.Deserialize<ExchangeRate>(json, _jsonOptions);
+
+                if (rate != null)
+                {
+                    ViewBag.Result = new ExchangeResponse
+                    {
+                        result = "success",
+                        base_code = fromUpper,
+                        target_code = toUpper,
+                        conversion_rate = rate.Rate,
+                        conversion_result = amount * rate.Rate
+                    };
+                }
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                ViewBag.Error = $"No exchange rate found for {fromUpper} to {toUpper}.";
+            }
+            else
+            {
+                ViewBag.Error = "Conversion failed. Could not reach exchange rate service.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ViewBag.Error = $"Conversion failed: {ex.Message}";
+        }
+
+        var httpClient = CreateClient();
+        var serviceResponse = await httpClient.GetAsync("api/servicerequests");
+        var serviceJson = await serviceResponse.Content.ReadAsStringAsync();
+        var serviceRequests = JsonSerializer.Deserialize<List<ServiceRequests>>(serviceJson, _jsonOptions) ?? new();
+
+        return View("Index", serviceRequests);
+    }
+
 }

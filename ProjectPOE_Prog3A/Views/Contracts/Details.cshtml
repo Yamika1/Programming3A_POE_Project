@@ -8,65 +8,174 @@
 
 <div>
     <h4>Contracts</h4>
+
+    <div class="mb-3">
+        <a href="/Contracts/Index" class="btn btn-success">← Back</a>
+    </div>
+
     <hr />
+
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ContractName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ContractName)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ContractDescription)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ContractDescription)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ContractType)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ContractType)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartDate)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.EndDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.EndDate)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ContractStatus)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ContractStatus)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.clients)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.clients)
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Files)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Files)
+        </dd>
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">
+            @switch ((ProjectPOE_Prog3A.Models.ContractStatus)ViewBag.Status)
+            {
+                case ProjectPOE_Prog3A.Models.ContractStatus.Active:
+                    <span class="badge bg-success">Active</span>
+                    break;
+
+                case ProjectPOE_Prog3A.Models.ContractStatus.Draft:
+                    <span class="badge bg-warning text-dark">Draft</span>
+                    break;
+
+                case ProjectPOE_Prog3A.Models.ContractStatus.Expired:
+                    <span class="badge bg-danger">Expired</span>
+                    break;
+
+                default:
+                    <span class="badge bg-secondary">Unknown</span>
+                    break;
+            }
         </dd>
     </dl>
 </div>
+
+<div class="row">
+
+
+    <div class="col-lg-8 mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Documents (@(Model.Files?.Count ?? 0))</h5>
+            </div>
+
+            <div class="card-body">
+
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["Error"]
+                    </div>
+                }
+
+
+                <form asp-action="Upload" method="post" enctype="multipart/form-data" class="mb-4">
+
+                    <input type="hidden" name="contractId" value="@Model.Id" />
+
+                    <div class="input-group">
+                        <input type="file" name="file" class="form-control" required />
+                        <button type="submit" class="btn btn-success">
+                            Upload
+                        </button>
+
+                    </div>
+
+                </form>
+                <hr />
+
+                @if (Model.Files == null || Model.Files.Count == 0)
+                {
+                    <p class="text-muted">No documents uploaded.</p>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var doc in Model.Files)
+                        {
+                            <div class="list-group-item">
+
+                                <strong>@doc.FileName</strong><br />
+
+                                <small class="text-muted">
+                                    @(doc.FileSize / 1024) KB |
+                                    @doc.UploadedDate.ToString("MMM dd, yyyy")
+                                </small>
+
+                                <div class="mt-2">
+                                    <a asp-action="DownloadFile"
+                                       asp-route-fileId="@doc.Id"
+                                       target="_blank"
+                                       class="btn btn-sm btn-primary">
+                                        View
+                                    </a>
+
+
+                                    <a asp-action="DownloadFile"
+                                       asp-route-fileId="@doc.Id"
+                                       asp-route-download="true"
+                                       class="btn btn-sm btn-success">
+                                        Download
+                                    </a>
+                                </div>
+
+
+                            </div>
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
