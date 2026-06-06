@@ -11,7 +11,7 @@ namespace Web_Api.Models.Entities
 
         public string Region { get; set; }
 
-        public int ContactNumber { get; set; }
+        public string ContactNumber { get; set; }
 
         public string EmailAddress { get; set; }
     }
