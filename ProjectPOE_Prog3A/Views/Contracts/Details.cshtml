@@ -51,26 +51,6 @@
             @Html.DisplayFor(model => model.EndDate)
         </dd>
 
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ContractStatus)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ContractStatus)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.clients)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.clients)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Files)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Files)
-        </dd>
         <dt class="col-sm-2">Status</dt>
         <dd class="col-sm-10">
             @switch ((ProjectPOE_Prog3A.Models.ContractStatus)ViewBag.Status)
@@ -87,8 +67,12 @@
                     <span class="badge bg-danger">Expired</span>
                     break;
 
+                case ProjectPOE_Prog3A.Models.ContractStatus.OnHold:
+                    <span class="badge bg-secondary">On Hold</span>
+                    break;
+
                 default:
-                    <span class="badge bg-secondary">Unknown</span>
+                    <span class="badge bg-light text-dark">Unknown</span>
                     break;
             }
         </dd>
@@ -96,8 +80,6 @@
 </div>
 
 <div class="row">
-
-
     <div class="col-lg-8 mt-4">
         <div class="card">
             <div class="card-header">
@@ -106,7 +88,6 @@
 
             <div class="card-body">
 
-
                 @if (TempData["Error"] != null)
                 {
                     <div class="alert alert-danger">
@@ -114,20 +95,16 @@
                     </div>
                 }
 
-
                 <form asp-action="Upload" method="post" enctype="multipart/form-data" class="mb-4">
-
                     <input type="hidden" name="contractId" value="@Model.Id" />
-
                     <div class="input-group">
                         <input type="file" name="file" class="form-control" required />
                         <button type="submit" class="btn btn-success">
                             Upload
                         </button>
-
                     </div>
-
                 </form>
+
                 <hr />
 
                 @if (Model.Files == null || Model.Files.Count == 0)
@@ -140,14 +117,11 @@
                         @foreach (var doc in Model.Files)
                         {
                             <div class="list-group-item">
-
                                 <strong>@doc.FileName</strong><br />
-
                                 <small class="text-muted">
                                     @(doc.FileSize / 1024) KB |
                                     @doc.UploadedDate.ToString("MMM dd, yyyy")
                                 </small>
-
                                 <div class="mt-2">
                                     <a asp-action="DownloadFile"
                                        asp-route-fileId="@doc.Id"
@@ -155,8 +129,6 @@
                                        class="btn btn-sm btn-primary">
                                         View
                                     </a>
-
-
                                     <a asp-action="DownloadFile"
                                        asp-route-fileId="@doc.Id"
                                        asp-route-download="true"
@@ -164,8 +136,6 @@
                                         Download
                                     </a>
                                 </div>
-
-
                             </div>
                         }
                     </div>

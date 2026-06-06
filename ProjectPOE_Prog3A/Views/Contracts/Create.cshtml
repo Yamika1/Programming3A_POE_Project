@@ -36,34 +36,17 @@
 
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
+                <input asp-for="StartDate" class="form-control" type="date" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
+                <input asp-for="EndDate" class="form-control" type="date" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="ContractStatus" class="control-label"></label>
-                <input asp-for="ContractStatus" class="form-control" />
-                <span asp-validation-for="ContractStatus" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="clients" class="control-label"></label>
-                <input asp-for="clients" class="form-control" />
-                <span asp-validation-for="clients" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Files" class="control-label"></label>
-                <input asp-for="Files" class="form-control" />
-                <span asp-validation-for="Files" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -73,3 +56,9 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

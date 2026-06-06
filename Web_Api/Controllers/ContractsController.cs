@@ -24,8 +24,7 @@ namespace Web_Api.Controllers
             return Ok(dbContext.Contracts.ToList());
         }
 
-        [HttpGet]
-        [Route("{id:int}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetContractById(int id)
         {
             var contract = dbContext.Contracts.Find(id);
@@ -47,11 +46,10 @@ namespace Web_Api.Controllers
 
             dbContext.Contracts.Add(contractEntity);
             dbContext.SaveChanges();
-            return Ok(contractEntity);
+            return CreatedAtAction(nameof(GetContractById), new { id = contractEntity.Id }, contractEntity);
         }
 
-        [HttpPut]
-        [Route("{id:int}")]
+        [HttpPut("{id:int}")]
         public IActionResult UpdateContract(int id, UpdateContractDto updateContractDto)
         {
             var contract = dbContext.Contracts.Find(id);
@@ -67,8 +65,7 @@ namespace Web_Api.Controllers
             return Ok(contract);
         }
 
-        [HttpDelete]
-        [Route("{id:int}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteContract(int id)
         {
             var contract = dbContext.Contracts.Find(id);
@@ -76,11 +73,11 @@ namespace Web_Api.Controllers
 
             dbContext.Contracts.Remove(contract);
             dbContext.SaveChanges();
-            return Ok();
+            return NoContent();
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<IActionResult> PatchProduct(int id,
+        public async Task<IActionResult> PatchContract(int id,
             [FromBody] JsonPatchDocument<Contracts> patchDoc)
         {
             if (patchDoc == null) return BadRequest();
@@ -96,7 +93,35 @@ namespace Web_Api.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             await dbContext.SaveChangesAsync();
-            return NoContent();
+            return Ok(contract);
+        }
+
+        [HttpGet("{id:int}/files")]
+        public IActionResult GetFilesByContract(int id)
+        {
+            var files = dbContext.contractFiles
+                .Where(f => f.ContractId == id)
+                .ToList();
+            return Ok(files);
+        }
+
+        [HttpGet("files/{fileId:int}")]
+        public IActionResult GetFileById(int fileId)
+        {
+            var file = dbContext.contractFiles.Find(fileId);
+            if (file == null) return NotFound();
+            return Ok(file);
+        }
+
+        [HttpPost("files")]
+        public IActionResult AddFile([FromBody] ContractFile file)
+        {
+            if (file == null) return BadRequest();
+
+            dbContext.contractFiles.Add(file);
+            dbContext.SaveChanges();
+
+            return CreatedAtAction(nameof(GetFileById), new { fileId = file.Id }, file);
         }
     }
-    }
+}

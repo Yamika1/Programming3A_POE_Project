@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../UnitTest1/UnitTest1.csproj" Id="101641c1-13ce-48d1-8967-076284284288" />
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>

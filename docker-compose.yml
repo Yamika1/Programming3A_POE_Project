@@ -49,6 +49,9 @@ services:
     ports:
       - "8082:8080"
     restart: on-failure
+    volumes:
+      - uploads:/app/wwwroot/uploads
 
 volumes:
   sqldata:
+  uploads:

@@ -34,51 +34,55 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContractStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.clients)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Files)
-            </th>
+            <th>Status</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.ContractName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ContractDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ContractType)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.ContractStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.clients)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Files)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.ContractName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.ContractDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.ContractType)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.EndDate)
+                </td>
+                <td>
+                    @switch (item.ContractStatus)
+                    {
+                        case ProjectPOE_Prog3A.Models.ContractStatus.Active:
+                            <span class="badge bg-success">Active</span>
+                            break;
+                        case ProjectPOE_Prog3A.Models.ContractStatus.Draft:
+                            <span class="badge bg-warning text-dark">Draft</span>
+                            break;
+                        case ProjectPOE_Prog3A.Models.ContractStatus.Expired:
+                            <span class="badge bg-danger">Expired</span>
+                            break;
+                        case ProjectPOE_Prog3A.Models.ContractStatus.OnHold:
+                            <span class="badge bg-secondary">On Hold</span>
+                            break;
+                        default:
+                            <span class="badge bg-light text-dark">Unknown</span>
+                            break;
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

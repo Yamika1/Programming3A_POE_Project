@@ -27,4 +27,9 @@ RUN dotnet publish "./ProjectPOE_Prog3A.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+USER root
+RUN mkdir -p /app/wwwroot/uploads && chmod 777 /app/wwwroot/uploads
+USER app
+
 ENTRYPOINT ["dotnet", "ProjectPOE_Prog3A.dll"]

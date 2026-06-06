@@ -16,6 +16,7 @@ namespace Web_Api.Data
         public DbSet<ServiceRequests> ServiceRequests { get; set; }
 
         public DbSet<ExchangeRate> ExchangeRates { get; set; }
+        public DbSet<ContractFile> contractFiles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Contracts>().ToTable("Contracts");
